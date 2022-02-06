@@ -9,6 +9,8 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <pwd.h>
 
 // ============================= //
 // === SAELMA Implementation === //
@@ -41,6 +43,7 @@ string_t * find_pipe(string_t * tokens, string_t delimiter);
 
 // === Custom Functions === //
 
+void get_username();
 void load_nick();
 void saelma_nick(string_t * args);
 void saelma_exit(void);

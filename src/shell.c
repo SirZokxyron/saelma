@@ -142,13 +142,25 @@ string_t * find_pipe(string_t * tokens, string_t delimiter) {
 
 // === Custom Functions === //
 
+/* Get username from host */
+void get_username() {
+    uid_t uid = geteuid();
+    struct passwd *pw = getpwuid(uid);
+    if (pw) {
+        strcpy(user_nick, pw->pw_name);
+        return;
+    }
+    strcpy(user_nick, "user"); // No username found. User = default string
+}
 void load_nick() {
     FILE * f = fopen(".config/nick", "r");
     if (!f) {
-        print_error("\033[0;31mCRITICAL\033[0;0m Missing file .config/nick with username.\n");
-        exit(-1);
+        // Handle host username instead.
+        get_username();
+        return;
     }
     fgets(user_nick, NICK_MAX_LEN, f);
+    fclose(f);
 }
 void saelma_nick(string_t * args) {
     if (!args[1]) {
@@ -156,14 +168,18 @@ void saelma_nick(string_t * args) {
         exit(-1);
     }
     strcpy(user_nick, args[1]);
+    // Create file if not exist
+    struct stat st = {0};
+    if (stat(".config", &st) == -1) {
+        mkdir(".config", 0644);
+    }
     FILE * f = fopen(".config/nick", "w");
     if (!f) {
-        print_error("\033[0;31mCRITICAL\033[0;0m Missing file .config/nick with username.\n");
+        print_error("\033[0;31mCRITICAL\033[0;0m Cannot write .config/nick file.\n");
         exit(-1);
     }
     fputs(user_nick, f);
-    load_nick();
-    exit(0);
+    fclose(f);
 }
 void saelma_exit(void) {
     print_saelma("Exiting...\n");

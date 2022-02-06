@@ -1,3 +1,5 @@
 *.o
 saelma
 *.out
+.config
+nick
