@@ -40,8 +40,6 @@ int child(string_t * tokens) {
     execvp(pipe_tokens[0], pipe_tokens); // Going throught PATH env first
     if (!strcmp(pipe_tokens[0], "hello")) { // If it fails, then checking for custom commands
         saelma_hello(pipe_tokens);
-    } else if (!strcmp(pipe_tokens[0], "nick")) {
-        saelma_nick(pipe_tokens);
     }
     print_error("Unknown command: \"%s\"\n", pipe_tokens[0]); // Otherwise, print error message
     exit(-1);
@@ -63,7 +61,8 @@ int main(int argc, string_t argv[]) {
 
     // Setting up the main while loop
     int debug = atoi(argv[1]); // Retrieving the debug flag from the user
-    string_t cmd = (string_t)malloc(sizeof(char) * CMD_MAX_LEN+1); // 
+    char cmd_arr[CMD_MAX_LEN]; 
+    string_t cmd = cmd_arr; // Better use stack allocation to avoid memory leaks in childs
     int n;
     string_t tokens[CMD_MAX_TOK];
     pid_t pid;
@@ -96,11 +95,12 @@ int main(int argc, string_t argv[]) {
 
         if (!strcmp(tokens[0], "exit")) { // Checking for the keyword "exit"
             saelma_exit();
-            free(cmd);
         }
 
         // Creating a child process to execute the command
-        if (!(pid = Fork())) {
+        if (!strcmp(tokens[0], "nick")) {
+            saelma_nick(tokens);
+        } else if (!(pid = Fork())) {
             // Child behavior
             if (pid != -1) child(tokens);
             print_error("Failure during subprocess creation.\n");
@@ -110,6 +110,5 @@ int main(int argc, string_t argv[]) {
             wait(NULL); // Parent always wait for child process
         }
     }
-    free(cmd);
     return 0; // Shouldn't ever happen but who knows?
 }
