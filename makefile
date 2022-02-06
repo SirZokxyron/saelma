@@ -9,17 +9,17 @@ debug: saelma
 CC = clang
 CFLAGS = -Werror -Wextra -Wall #-O3
 
-%: %.o
+%: src/%.o
 	$(CC) $(CFLAGS) $^ -o $@
-%.o: %.c
+%.o: src/%.c
 	$(CC) $(CFLAGS) $< -c
 
 # === Links === #
-saelma: saelma.o shell.o
+saelma: src/saelma.o src/shell.o
 
 # === Utilities === #
 clean:
-	rm *.o
+	rm src/*.o
 
 clear:
 	rm saelma
