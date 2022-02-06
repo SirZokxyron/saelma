@@ -94,7 +94,10 @@ int main(int argc, string_t argv[]) {
         if (debug) for(int i = 0; tokens[i] != NULL; i++)
         print_debug("token[%d]: \"%s\"\n", i, tokens[i]);
 
-        if (!strcmp(tokens[0], "exit")) saelma_exit(); // Checking for the keyword "exit"
+        if (!strcmp(tokens[0], "exit")) { // Checking for the keyword "exit"
+            saelma_exit();
+            free(cmd);
+        }
 
         // Creating a child process to execute the command
         if (!(pid = Fork())) {
@@ -107,5 +110,6 @@ int main(int argc, string_t argv[]) {
             wait(NULL); // Parent always wait for child process
         }
     }
+    free(cmd);
     return 0; // Shouldn't ever happen but who knows?
 }
