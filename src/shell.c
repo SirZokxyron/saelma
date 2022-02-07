@@ -155,7 +155,7 @@ void get_username() {
 void load_nick() {
     FILE * f = fopen(".config/nick", "r");
     if (!f) {
-        // Handle host username instead.
+        // Handle host username instead
         get_username();
         return;
     }
@@ -169,9 +169,9 @@ void saelma_nick(string_t * args) {
     }
     strcpy(user_nick, args[1]);
     // Create file if not exist
-    struct stat st = {0};
+    struct stat st = { 0 };
     if (stat(".config", &st) == -1) {
-        mkdir(".config", 0644);
+        mkdir(".config", 0775);
     }
     FILE * f = fopen(".config/nick", "w");
     if (!f) {
