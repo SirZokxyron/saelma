@@ -2,46 +2,46 @@
 
 int child(string_t * tokens) {
 
-    string_t * pipe_tokens = find_pipe(tokens, "|");
-    if (pipe_tokens) {
-        // print_debug("Pipe detected.\n");
+    string_t * new_tokens = find_pipe(tokens, "|");
+
+    while (new_tokens) {
         int com[2];
-        int pid;
+
         if (pipe(com) == -1) {
-            print_error("Pipe creation for subprocess failed.\n");
+            print_error("Pipe creation failed.\n");
             exit(-1);
         }
-        if (!(pid = Fork())) {
+        if (Fork() == 0) {
             // Child behavior
-            if (pid != -1) {
-                close(com[0]);
-                dup2(com[1], 1);
-                child(tokens);
-            }
-            print_error("Failure during piped subprocess creation.\n");
-            exit(-1); // Return in case of fork failure
+            close(com[0]);
+            dup2(com[1], 1);
+            child(tokens);
         } else {
             // Parent behavior
             close(com[1]);
             dup2(com[0], 0);
             wait(NULL);
         }
-    } else {
-        pipe_tokens = tokens;
+
+        tokens = new_tokens;
+        new_tokens = find_pipe(tokens, "|");
     }
 
-    int flag = set_redirect(pipe_tokens);
+    // for(int i = 0; tokens[i] != NULL; i++)
+    // print_debug("token[%d]: \"%s\"\n", i, tokens[i]);
+
+    int flag = set_redirect(tokens);
     if (flag == -1) exit(-1);
 
     // Checking for "sudo" keyword
-    if (!strcmp(pipe_tokens[0], "sudo")) { saelma_sudo(); exit(0); }
+    if (!strcmp(tokens[0], "sudo")) { saelma_sudo(); exit(0); }
 
-    // printf("pipe_tokens[%d]: %s\n", 2, pipe_tokens[2]); fflush(stdout);
-    execvp(pipe_tokens[0], pipe_tokens); // Going throught PATH env first
-    if (!strcmp(pipe_tokens[0], "hello")) { // If it fails, then checking for custom commands
-        saelma_hello(pipe_tokens);
+    // printf("new_tokens[%d]: %s\n", 2, new_tokens[2]); fflush(stdout);
+    execvp(tokens[0], tokens); // Going throught PATH env first
+    if (!strcmp(tokens[0], "hello")) { // If it fails, then checking for custom commands
+        saelma_hello(tokens);
     }
-    print_error("Unknown command: \"%s\"\n", pipe_tokens[0]); // Otherwise, print error message
+    print_error("Unknown command: \"%s\"\n", tokens[0]); // Otherwise, print error message
     exit(-1);
 }
 
@@ -72,7 +72,7 @@ int main(int argc, string_t argv[]) {
         memset(cmd, 0, CMD_MAX_LEN);
         memset(tokens, 0, CMD_MAX_TOK);
 
-        print_prompt(); fflush(stdout); // Displaying the prompt //? Add customization later
+        print_prompt(); fflush(stdout); // Displaying the prompt //? Add CWD and CD ??
 
         n = read(0, cmd, CMD_MAX_LEN); // Reading the user input
         if (!n) { printf("\n"); saelma_exit(); } // Capturing CTRL-D's EOF
@@ -100,6 +100,8 @@ int main(int argc, string_t argv[]) {
         // Creating a child process to execute the command
         if (!strcmp(tokens[0], "nick")) {
             saelma_nick(tokens);
+        } else if (!strcmp(tokens[0], "cd")) {
+            saelma_cd(tokens);
         } else if (!(pid = Fork())) {
             // Child behavior
             if (pid != -1) child(tokens);

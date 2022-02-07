@@ -2,15 +2,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <sys/wait.h>
-#include <limits.h>
 #include <stdarg.h>
+
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <pwd.h>
+
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
 
 // ============================= //
 // === SAELMA Implementation === //
@@ -43,9 +45,10 @@ string_t * find_pipe(string_t * tokens, string_t delimiter);
 
 // === Custom Functions === //
 
-void get_username();
+void get_username(string_t nick);
 void load_nick();
 void saelma_nick(string_t * args);
+void saelma_cd(string_t * args);
 void saelma_exit(void);
 void saelma_hello(string_t * args);
 void saelma_sudo();

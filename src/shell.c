@@ -15,7 +15,9 @@ void print_logo(void) {
     printf("\033[0;32m╚══════╝ ╚═╝  ╚══════╝ ╚══════╝ ╚═╝     ╚═╝ ╚═╝  ╚═╝\033[0;0m\n\n");
 }
 void print_prompt(void) {
-    fprintf(stdout, "\033[0;35m%s\033[0;0m@\033[0;32mSÆLMA\033[0;0m \033[0;35m>\033[0;0m ", user_nick);
+    char buf[128];
+    getcwd(buf, 128);
+    fprintf(stdout, "\033[0;35m\033[1m%s\033[0;0m@\033[0;32m\033[1mSÆLMA\033[0;0m:\033[32m%s\033[0m\033[0;35m>\033[0;0m ", user_nick, buf);
 }
 void print_saelma(const string_t format, ...) {
     fprintf(stderr, "\033[0;32m[SÆLMA]\033[0;0m ");
@@ -143,20 +145,20 @@ string_t * find_pipe(string_t * tokens, string_t delimiter) {
 // === Custom Functions === //
 
 /* Get username from host */
-void get_username() {
+void get_username(string_t nick) {
     uid_t uid = geteuid();
     struct passwd *pw = getpwuid(uid);
     if (pw) {
-        strcpy(user_nick, pw->pw_name);
+        strcpy(nick, pw->pw_name);
         return;
     }
-    strcpy(user_nick, "user"); // No username found. User = default string
+    strcpy(nick, "user"); // No username found. User = default string
 }
 void load_nick() {
     FILE * f = fopen(".config/nick", "r");
     if (!f) {
         // Handle host username instead
-        get_username();
+        get_username(user_nick);
         return;
     }
     fgets(user_nick, NICK_MAX_LEN, f);
@@ -180,6 +182,21 @@ void saelma_nick(string_t * args) {
     }
     fputs(user_nick, f);
     fclose(f);
+}
+void saelma_cd(string_t * args) {
+    char path[1024];
+    strcpy(path, args[1]);
+
+    char cwd[1024];
+    if(args[1][0] != '/')
+    {
+        getcwd(cwd, sizeof(cwd));
+        strcat(cwd, "/");
+        strcat(cwd, path);
+        chdir(cwd);
+    } else {
+        chdir(args[1]);
+    }
 }
 void saelma_exit(void) {
     print_saelma("Exiting...\n");

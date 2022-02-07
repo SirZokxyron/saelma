@@ -7,7 +7,7 @@ debug: saelma
 
 # === Compilation rules === #
 CC = clang
-CFLAGS = -Werror -Wextra -Wall #-O3
+CFLAGS = -Werror -Wextra -Wall -g # -O3
 
 %: src/%.o
 	$(CC) $(CFLAGS) $^ -o $@
