@@ -155,7 +155,7 @@ void get_username(string_t nick) {
     strcpy(nick, "user"); // No username found. User = default string
 }
 void load_nick() {
-    FILE * f = fopen(".config/nick", "r");
+    FILE * f = fopen(config_path, "r");
     if (!f) {
         // Handle host username instead
         get_username(user_nick);
@@ -164,10 +164,18 @@ void load_nick() {
     fgets(user_nick, NICK_MAX_LEN, f);
     fclose(f);
 }
+void load_config() {
+    char name[NICK_MAX_LEN];
+    get_username(name);
+    printf("%s\n", config_path);
+    strcat(config_path, name);
+    printf("%s\n", config_path);
+    strcat(config_path, "/.config/saelma");
+    printf("%s\n", config_path);
+}
 void saelma_nick(string_t * args) {
     if (!args[1]) {
         print_error("Missing argument for command nick <username>.\n");
-        exit(-1);
     }
     strcpy(user_nick, args[1]);
     // Create file if not exist
@@ -175,7 +183,7 @@ void saelma_nick(string_t * args) {
     if (stat(".config", &st) == -1) {
         mkdir(".config", 0775);
     }
-    FILE * f = fopen(".config/nick", "w");
+    FILE * f = fopen(config_path, "w");
     if (!f) {
         print_error("\033[0;31mCRITICAL\033[0;0m Cannot write .config/nick file.\n");
         exit(-1);
