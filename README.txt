@@ -8,7 +8,7 @@
 ███╗                                            ███╗
 ██╔╝                                            ╚██║
 ██║      Hugo Bensia  -  Claire Louboutin        ██║
-██║                L3 M&I UGA                    ██║
+██║               Sofiane Djerbi                 ██║
 ███╗                                            ███║
 ╚══╝                                            ╚══╝
 
