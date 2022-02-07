@@ -25,13 +25,12 @@ We hope you will like the experience it provides.
 ███╗                                            ███║
 ╚══╝                                            ╚══╝
 
-✔  Looping prompt accepting command
-✔  Redirections support (except <<)
-✔  Pipe support
-✘  Multi-pipe support
-✔  Neat interface
-✔  Persistent user-defined nickname
-✔  Custom functions
+✓  Looping prompt accepting commands
+✓  Redirections support (except <<)
+✓  Pipe and multi-pipe support
+✓  Neat interface
+✓  Persistent customizable nickname
+✓  Custom functions
 
 ███╗                                            ███╗
 ██╔╝             Custom functions               ╚██║
@@ -50,5 +49,4 @@ All of these were made mostly for fun,
 ███╗                                            ███║
 ╚══╝                                            ╚══╝
 
-- Multi pipe
-- 
+Absolutely none.
