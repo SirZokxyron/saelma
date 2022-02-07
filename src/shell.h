@@ -21,7 +21,8 @@
 
 typedef char * string_t;
 
-static char user_nick[NICK_MAX_LEN] = "User";
+static char user_nick[NICK_MAX_LEN];
+static char config_path[NICK_MAX_LEN + 21] = "/home/";
 
 // === Display === //
 
@@ -43,6 +44,7 @@ string_t * find_pipe(string_t * tokens, string_t delimiter);
 // === Custom Functions === //
 
 void get_username(string_t nick);
+void load_config();
 void load_nick();
 void saelma_nick(string_t * args);
 void saelma_cd(string_t * args);
