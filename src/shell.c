@@ -167,25 +167,17 @@ void load_nick() {
 void load_config() {
     char name[NICK_MAX_LEN];
     get_username(name);
-    printf("%s\n", config_path);
     strcat(config_path, name);
-    printf("%s\n", config_path);
     strcat(config_path, "/.config/saelma");
-    printf("%s\n", config_path);
 }
 void saelma_nick(string_t * args) {
     if (!args[1]) {
         print_error("Missing argument for command nick <username>.\n");
     }
     strcpy(user_nick, args[1]);
-    // Create file if not exist
-    struct stat st = { 0 };
-    if (stat(".config", &st) == -1) {
-        mkdir(".config", 0775);
-    }
     FILE * f = fopen(config_path, "w");
     if (!f) {
-        print_error("\033[0;31mCRITICAL\033[0;0m Cannot write .config/nick file.\n");
+        print_error("\033[0;31mCRITICAL\033[0;0m Cannot write %s file.\n", config_path);
         exit(-1);
     }
     fputs(user_nick, f);

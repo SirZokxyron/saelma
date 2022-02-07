@@ -56,9 +56,12 @@ int main(int argc, string_t argv[]) {
     // Displays the logo
     print_logo();
 
+    // Loads config path
+    load_config();
+
     // Loads the user nick
     load_nick();
-
+    
     // Setting up the main while loop
     int debug = atoi(argv[1]); // Retrieving the debug flag from the user
     char cmd_arr[CMD_MAX_LEN]; 
@@ -96,7 +99,6 @@ int main(int argc, string_t argv[]) {
         if (!strcmp(tokens[0], "exit")) { // Checking for the keyword "exit"
             saelma_exit();
         }
-
         // Creating a child process to execute the command
         if (!strcmp(tokens[0], "nick")) {
             saelma_nick(tokens);
