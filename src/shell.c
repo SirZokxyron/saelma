@@ -189,7 +189,7 @@ void saelma_cd(string_t * args) {
         print_error("Missing argument for command: cd <dir>\n");
         return;
     }
-    
+    int rvalue;
     char path[1024];
     strcpy(path, args[1]);
 
@@ -199,10 +199,11 @@ void saelma_cd(string_t * args) {
         getcwd(cwd, sizeof(cwd));
         strcat(cwd, "/");
         strcat(cwd, path);
-        chdir(cwd);
+        rvalue = chdir(cwd);
     } else {
-        chdir(args[1]);
+        rvalue = chdir(args[1]);
     }
+    if (rvalue != 0) print_error("%s: No such directory.\n", args[1]);
 }
 void saelma_exit(void) {
     print_saelma("Exiting...\n");
