@@ -4,7 +4,7 @@
 // === SÆLMA Implementation === //
 // ============================ //
 
-// === Display === //
+// === Display === //   
 
 void print_logo(void) {
     printf("\033[0;35m███████\033[0;32m╗  \033[0;35m█████\033[0;32m╗\033[0;35m█████\033[0;32m╗ \033[0;35m██\033[0;32m╗      \033[0;35m███\033[0;32m╗   \033[0;35m███\033[0;32m╗  \033[0;35m█████\033[0;32m╗ \n");
@@ -166,8 +166,8 @@ void load_nick() {
 }
 void saelma_nick(string_t * args) {
     if (!args[1]) {
-        print_error("Missing argument for command nick <username>.\n");
-        exit(-1);
+        print_error("Missing argument for command: nick <username>\n");
+        return;
     }
     strcpy(user_nick, args[1]);
     // Create file if not exist
@@ -177,13 +177,18 @@ void saelma_nick(string_t * args) {
     }
     FILE * f = fopen(".config/nick", "w");
     if (!f) {
-        print_error("\033[0;31mCRITICAL\033[0;0m Cannot write .config/nick file.\n");
+        print_error("\033[0;31mCRITICAL\033[0;0m Cannot write to .config/nick file.\n");
         exit(-1);
     }
     fputs(user_nick, f);
     fclose(f);
 }
 void saelma_cd(string_t * args) {
+    if (!args[1]) {
+        print_error("Missing argument for command: cd <dir>\n");
+        return;
+    }
+    
     char path[1024];
     strcpy(path, args[1]);
 
@@ -204,9 +209,9 @@ void saelma_exit(void) {
 }
 void saelma_hello(string_t * args) {
     if (!args[1]) {
-        print_saelma("hello\n");
+        print_saelma("hello there\n");
     } else if (!strcmp(args[1], "there")) {
-        print_saelma("\033[0;33mGeneral Kenobi!?\033[0;0m\n");
+        print_saelma("\033[0;33m\033[1mGeneral Kenobi!?\033[0;0m\n");
     } else {
         print_saelma("hello user\n");
     }

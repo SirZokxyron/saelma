@@ -13,10 +13,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 
-
-// ============================= //
-// === SAELMA Implementation === //
-// ============================= //
+// === Defining constants and aliases === //
 
 #define CMD_MAX_LEN     1024
 #define CMD_MAX_TOK     64
